@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="MissedMe AI helps you find the important messages, tasks, deadlines, and decisions hidden in long conversations."
+    />
+    <meta name="theme-color" content="#0b1422" />
+    <title>MissedMe AI — Never miss what matters</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand-block" href="#" aria-label="MissedMe AI home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span class="brand-copy">
+            <span class="brand-name">MissedMe <span>AI</span></span>
+            <span class="brand-tag">Never miss what matters.</span>
+          </span>
+        </a>
+        <div class="header-tools">
+          <div class="privacy-pill" aria-label="Conversation analysis stays in this browser">
+            <span class="privacy-dot" aria-hidden="true"></span>
+            <span>Local-only analysis</span>
+          </div>
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="Switch to light mode"
+            title="Switch to light mode"
+          >
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.2 15.6A8.8 8.8 0 0 1 8.4 3.8 8.8 8.8 0 1 0 20.2 15.6Z"></path>
+            </svg>
+            <span id="themeToggleLabel">Light mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="hero" aria-labelledby="hero-title">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Your conversation, made clear</p>
+          <h1 id="hero-title">Catch up on what matters.</h1>
+          <p class="lead">
+            Turn a busy thread into clear priorities, tasks, and decisions.
+            Your conversation stays right here in your browser.
+          </p>
+        </section>
+
+        <section class="input-panel panel" aria-labelledby="conversation-input-heading">
+          <div class="input-heading">
+            <div>
+              <p class="section-kicker">START HERE</p>
+              <h2 id="conversation-input-heading">Add a conversation</h2>
+              <p class="input-instructions">Paste messages below. One message per line works best; include names or timestamps if you have them.</p>
+            </div>
+            <span class="input-private-note"><span aria-hidden="true">▣</span> Private by design</span>
+          </div>
+
+          <label class="sr-only" for="conversationInput">Conversation messages</label>
+          <textarea
+            id="conversationInput"
+            rows="8"
+            spellcheck="false"
+            placeholder="Maya: Could you review the launch plan by tomorrow at 2pm?&#10;Alex: I’ll send feedback before the team sync.&#10;Maya: Great, we agreed to keep the current design."
+            aria-describedby="inputHint fileImportStatus validationMessage"
+          ></textarea>
+          <p id="inputHint" class="input-hint">Tip: The original wording is kept with each result, so you can check the context.</p>
+          <input id="chatFileInput" class="sr-only" type="file" accept=".txt,.zip,.pdf,.docx,.csv,.json,text/plain,application/zip,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/csv,application/json" tabindex="-1" aria-hidden="true" />
+          <p id="fileImportStatus" class="file-import-status" aria-live="polite"></p>
+          <div id="zipChoicePanel" class="zip-choice-panel" hidden>
+            <label for="zipFileSelect">This ZIP contains multiple text files. Choose the chat export to import:</label>
+            <div class="zip-choice-controls">
+              <select id="zipFileSelect"></select>
+              <button id="importZipSelectionButton" class="secondary-btn" type="button">Import selected file</button>
+              <button id="cancelZipSelectionButton" class="text-btn" type="button">Cancel</button>
+            </div>
+          </div>
+
+          <div class="input-footer">
+            <p id="validationMessage" class="validation-message" aria-live="polite"></p>
+            <div class="actions" aria-label="Conversation controls">
+              <button id="analyzeButton" class="primary-btn" type="button">
+                <span>Analyze conversation</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4"></path></svg>
+              </button>
+              <button id="sampleButton" class="secondary-btn" type="button">Load sample</button>
+              <button id="importFileButton" class="secondary-btn" type="button" aria-controls="chatFileInput">Import Conversation</button>
+              <button id="clearButton" class="text-btn" type="button">Clear</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="results-panel" aria-labelledby="results-heading">
+          <div class="results-topline">
+            <div>
+              <p class="section-kicker">YOUR RECAP</p>
+              <h2 id="results-heading">Conversation insights</h2>
+            </div>
+            <div id="loadingIndicator" class="loading-indicator" hidden>
+              <span class="loading-spinner" aria-hidden="true"></span>
+              Analyzing locally…
+            </div>
+          </div>
+          <p id="analysisStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+          <div id="summaryCard" class="summary-card empty-state">
+            <span class="summary-icon" aria-hidden="true">✳</span>
+            <div>
+              <h3>Quick summary</h3>
+              <p>No analysis yet. Paste or load a conversation to find the signal in the noise.</p>
+            </div>
+          </div>
+
+          <div class="overview" aria-label="Analysis overview">
+            <div class="overview-item overview-alert">
+              <span class="overview-label"><span class="overview-dot" aria-hidden="true"></span>Priority alerts</span>
+              <strong id="alertCount">0</strong>
+            </div>
+            <div class="overview-item overview-task">
+              <span class="overview-label"><span class="overview-dot" aria-hidden="true"></span>Action items</span>
+              <strong id="actionCount">0</strong>
+            </div>
+            <div class="overview-item overview-deadline">
+              <span class="overview-label"><span class="overview-dot" aria-hidden="true"></span>Deadlines</span>
+              <strong id="deadlineCount">0</strong>
+            </div>
+            <div class="overview-item overview-decision">
+              <span class="overview-label"><span class="overview-dot" aria-hidden="true"></span>Decisions</span>
+              <strong id="decisionCount">0</strong>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <section class="result-section tone-alert" aria-labelledby="priority-alerts-heading">
+              <div class="section-header">
+                <span class="section-icon" aria-hidden="true">!</span>
+                <h3 id="priority-alerts-heading">Priority Alerts</h3>
+              </div>
+              <div id="alertsList" class="result-list"></div>
+            </section>
+
+            <section class="result-section tone-task" aria-labelledby="action-items-heading">
+              <div class="section-header">
+                <span class="section-icon" aria-hidden="true">✓</span>
+                <h3 id="action-items-heading">Action Items</h3>
+              </div>
+              <div id="actionItemsList" class="result-list"></div>
+            </section>
+
+            <section class="result-section tone-deadline" aria-labelledby="deadlines-heading">
+              <div class="section-header">
+                <span class="section-icon" aria-hidden="true">◷</span>
+                <h3 id="deadlines-heading">Deadlines</h3>
+              </div>
+              <div id="deadlinesList" class="result-list"></div>
+            </section>
+
+            <section class="result-section tone-decision" aria-labelledby="decisions-heading">
+              <div class="section-header">
+                <span class="section-icon" aria-hidden="true">◇</span>
+                <h3 id="decisions-heading">Decisions</h3>
+              </div>
+              <div id="decisionsList" class="result-list"></div>
+            </section>
+
+            <section class="result-section tone-mention" aria-labelledby="mentions-heading">
+              <div class="section-header">
+                <span class="section-icon" aria-hidden="true">@</span>
+                <h3 id="mentions-heading">Mentions and Follow-ups</h3>
+              </div>
+              <div id="mentionsList" class="result-list"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Made for clearer conversations.</span>
+        <span><span class="footer-lock" aria-hidden="true">●</span> No uploads. No external AI.</span>
+      </footer>
+    </div>
+    <script src="vendor/jszip.min.js"></script>
+    <script src="vendor/pdf.min.js"></script>
+    <script src="importers.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

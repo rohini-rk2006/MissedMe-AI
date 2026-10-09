@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MissedMe file importer tests</title>
+    <style>
+      body { max-width: 900px; margin: 32px auto; padding: 0 16px; font: 15px/1.5 system-ui, sans-serif; }
+      li { margin: 5px 0; }
+      .pass { color: #087f49; }
+      .fail { color: #b4232c; }
+      #summary { font-weight: 700; }
+      code { background: #eee; padding: 2px 5px; }
+    </style>
+  </head>
+  <body>
+    <h1>MissedMe file importer tests</h1>
+    <p>These tests run the actual local import module and bundled parsers. No files leave this browser.</p>
+    <p id="summary" role="status">Running tests…</p>
+    <ol id="testResults"></ol>
+    <script src="../vendor/jszip.min.js"></script>
+    <script src="../vendor/pdf.min.js"></script>
+    <script src="../importers.js"></script>
+    <script src="importers.test.js"></script>
+  </body>
+</html>
